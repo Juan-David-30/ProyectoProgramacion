@@ -1,0 +1,33 @@
+#define TRIGGER_PIN  2  // Pin del Arduino conectado al pin TRIG del sensor
+#define ECHO_PIN     3  // Pin del Arduino conectado al pin ECHO del sensor
+
+void setup() {
+  pinMode(TRIGGER_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  long duracion, distancia;
+  
+  digitalWrite(TRIGGER_PIN, LOW);  
+  delayMicroseconds(2); 
+  
+  digitalWrite(TRIGGER_PIN, HIGH);
+  delayMicroseconds(10); 
+  
+  digitalWrite(TRIGGER_PIN, LOW);
+  duracion = pulseIn(ECHO_PIN, HIGH);
+  
+  distancia = (duracion/2) / 29.1;
+  
+  if (distancia >= 400 || distancia <= 2){
+    Serial.println("Fuera de rango");
+  }
+  else {
+    Serial.print(distancia);
+    Serial.println(" cm");
+  }
+  
+  delay(500);
+}
