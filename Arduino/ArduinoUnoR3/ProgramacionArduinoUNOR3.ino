@@ -105,8 +105,32 @@ void ServoLeft()
   servoMotor.write(180);
 }
 
-void labyrinthSolving()
-{
+void labyrinthSolving() {
+  float frontDistance, rightDistance, leftDistance;
+
+  ServoRight();
+  delay(500);
+  rightDistance = measureDistance();
+
+  ServoCenter();
+  delay(500);
+  frontDistance = measureDistance();
+
+  ServoLeft();
+  delay(500);
+  leftDistance = measureDistance();
+
+  if (rightDistance > 15) {
+    rt_right();
+  } else if (frontDistance > 15) {
+    mv_forward();
+  } else if (leftDistance > 15) {
+    rt_left();
+  } else {
+    rt_right();
+    rt_right();
+  }
+
 
 }
 
