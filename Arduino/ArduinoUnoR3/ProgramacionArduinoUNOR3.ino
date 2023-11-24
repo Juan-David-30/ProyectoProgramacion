@@ -191,8 +191,51 @@ void loop() {
 }
 
 
-void serialEvent()
-{
-  int length = 0;
+void serialEvent(){
+  
+  while (Serial.available()) {
+    char receivedChar = Serial.read();
+    
+    switch (receivedChar) {
+      case 'F':
+        mv_forward();
+        break;
+      case 'B':
+        mv_backward();
+        break;
+      case 'L':
+        rt_left();
+        break;
+      case 'R':
+        rt_right();
+        break;
+      case 'S':
+        stop();
+        break;
+      case 'l':
+        labyrinth = !labyrinth;
+        if (labyrinth) {
+          Serial.println("Labyrinth mode activated");
+        } else {
+          Serial.println("Labyrinth mode deactivated");
+        }
+        break;
+      default:
+        break;
+    }
+  }
+}
 
+float measureDistance() {
+  unsigned long duration;
+  float distance;
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration / 2.0) / 29.0;
+
+  return distance;
 }
