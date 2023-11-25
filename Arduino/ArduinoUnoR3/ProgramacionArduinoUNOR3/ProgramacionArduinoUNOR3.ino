@@ -16,12 +16,6 @@ AF_DCMotor motorFR(4);
 // Speed by default 
 int speed = 250;
 
-// Maximun length per message
-const unsigned int MAX_LENGTH = 4;
-
-// Character that indicates the end of a message
-char ender = '.';
-
 // Ultrasonido 
 const int trigPin = A3;
 const int echoPin = A4;
@@ -39,7 +33,6 @@ bool labyrinth = false;
 // Moving the car forward
 void mv_forward()
 {
-  Serial.write("Moving forwards\n");
   motorFL.run(FORWARD);
   motorBL.run(FORWARD);
   motorFR.run(FORWARD);
@@ -49,7 +42,6 @@ void mv_forward()
 // Moving the car backward
 void mv_backward()
 {
-  Serial.write("Moving backwards\n");
   motorFL.run(BACKWARD);
   motorBL.run(BACKWARD);
   motorFR.run(BACKWARD);
@@ -59,7 +51,6 @@ void mv_backward()
 // Rotating left
 void rt_left()
 {
-  Serial.write("Rotating left\n");
   motorFL.run(BACKWARD);
   motorBL.run(BACKWARD);
   motorFR.run(FORWARD);
@@ -70,7 +61,6 @@ void rt_left()
 // Rotating right
 void rt_right()
 {
-  Serial.write("Rotating right\n");
   motorFL.run(FORWARD);
   motorBL.run(FORWARD);
   motorFR.run(BACKWARD);
@@ -80,7 +70,6 @@ void rt_right()
 // Stopping the movement
 void stop()
 {
-  Serial.write("Stopping movement\n");
   motorFL.run(RELEASE);
   motorBL.run(RELEASE);
   motorFR.run(RELEASE);
@@ -105,30 +94,49 @@ void ServoLeft()
   servoMotor.write(180);
 }
 
+
+// Function to measure and send information obtained
+float measureDistance() {
+  unsigned long duration;
+  float distance;
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(1000);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = (duration / 2.0) / 29.0;
+
+  return distance;
+}
+
 void labyrinthSolving() {
   float frontDistance, rightDistance, leftDistance;
 
   ServoRight();
-  delay(500);
+  delay(800);
   rightDistance = measureDistance();
 
   ServoCenter();
-  delay(500);
+  delay(800);
   frontDistance = measureDistance();
 
   ServoLeft();
-  delay(500);
+  delay(800);
   leftDistance = measureDistance();
 
   if (rightDistance > 15) {
     rt_right();
+    delay(1000);
+    stop();
   } else if (frontDistance > 15) {
     mv_forward();
   } else if (leftDistance > 15) {
     rt_left();
   } else {
     rt_right();
-    rt_right();
+    delay(2000);
+    stop();
   }
 
 
@@ -168,10 +176,8 @@ void loop() {
   duration = pulseIn (echoPin, HIGH);
   distance = (duration / 2.0) / 29.0;
 
-  
-  Serial.print(", d = ");
+  // Sending distance information to the device 
   Serial.print(distance);
-  Serial.println(" cm");
   delayMicroseconds(1000);
 
   // Defining whether there is a wall close or not
@@ -195,7 +201,7 @@ void serialEvent(){
   
   while (Serial.available()) {
     char receivedChar = Serial.read();
-    
+    // Executing function according to character received
     switch (receivedChar) {
       case 'F':
         mv_forward();
@@ -214,11 +220,6 @@ void serialEvent(){
         break;
       case 'l':
         labyrinth = !labyrinth;
-        if (labyrinth) {
-          Serial.println("Labyrinth mode activated");
-        } else {
-          Serial.println("Labyrinth mode deactivated");
-        }
         break;
       default:
         break;
@@ -226,16 +227,3 @@ void serialEvent(){
   }
 }
 
-float measureDistance() {
-  unsigned long duration;
-  float distance;
-
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(1000);
-  digitalWrite(trigPin, LOW);
-
-  duration = pulseIn(echoPin, HIGH);
-  distance = (duration / 2.0) / 29.0;
-
-  return distance;
-}
