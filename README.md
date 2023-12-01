@@ -19,7 +19,7 @@ Resumen:
 El proyecto llevado a cabo se trata de la construcción de un carro utilizando un Arduino UNO R3. El proyecto cuenta con tres partes que se programan, dos de ellas desarrolladas en el IDE de Arduino
 y una utilizando Javascript, la primera parte es el ensamblado y programado del Arduino UNO para que sea capaz de moverse utilizando la estructura del carro que hemos creado. 
 La segunda parte es la programación del modulo bluetooth para que sea capaz de transmitir la información del Arduino R1 a la aplicación creada en el proyecto. Por ultimo es la 
-creación de la aplicación , esta aplicación permite el control del carro y debido a el modulo wifi es capaz de controlar el carro de forma remota.
+creación de la aplicación , esta aplicación permite el control del carro y debido a el modulo bluetooth es capaz de controlar el carro de forma remota.
 
 La dificultad del proyecto es entender como funciona y como programar los diversos componentes del arduino UNO, el módulo bluetooth, el algoritmo de resolución de laberintos y la aplicación
 Como unir estas partes del proyecto para poder crear un carro controlado a distancia, que supla las funcionalidades propuestas en el proyecto y que se puede llevar la programación a algo fisico
